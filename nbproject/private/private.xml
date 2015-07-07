@@ -34,12 +34,6 @@
             <file>file:/C:/Users/Caio/Downloads/Projeto%20ATID/Versão%20antiga/atiddesktop/src/org/atid/editor/commands/SetUnsetSimpleActivityStaticCommand.java</file>
             <file>file:/C:/Users/Caio/Downloads/Projeto%20ATID/Versão%20antiga/atiddesktop/src/org/atid/petrinet/ArcEdge.java</file>
         </group>
-        <group>
-            <file>file:/Users/caiolucena/Downloads/atiddesktop%2009-06/atiddesktop/src/org/atid/editor/actions/DeleteAction.java</file>
-            <file>file:/Users/caiolucena/Downloads/atiddesktop%2009-06/atiddesktop/src/org/atid/editor/actions/ExportAction.java</file>
-            <file>file:/Users/caiolucena/Downloads/atiddesktop%2009-06/atiddesktop/src/org/atid/petrinet/xml/DocumentExporter.java</file>
-            <file>file:/Users/caiolucena/Downloads/atiddesktop%2009-06/atiddesktop/src/org/atid/editor/RootPflow.java</file>
-            <file>file:/Users/caiolucena/Downloads/atiddesktop%2009-06/atiddesktop/src/org/atid/editor/canvas/ArcFeature.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>
