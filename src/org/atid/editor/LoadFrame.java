@@ -18,6 +18,7 @@ public class LoadFrame extends JWindow{
     
     private JProgressBar progressBar;
     private final String[] args;
+    
     public LoadFrame(final String[] args){
        
         this.args = args;
@@ -26,7 +27,7 @@ public class LoadFrame extends JWindow{
         int heigth = this.getToolkit().getDefaultToolkit().getScreenSize().height;
         int z = 2;
         int x = (width - 521) / z;
-        int y = (heigth - 285) / z;
+        int y = (heigth - 265) / z;
         
         JLabel img = new JLabel();
         img.setIcon(GraphicsTools.getIcon("loadImageAtid.png"));
@@ -41,7 +42,6 @@ public class LoadFrame extends JWindow{
         this.setVisible(true);
         
         progressBar = new JProgressBar();
-        //progressBar.setBackground(new Color(0,102,52));
         progressBar.setBounds(0,245,521,20);
         progressBar.setStringPainted(true);
         this.add(progressBar);
@@ -56,8 +56,8 @@ public class LoadFrame extends JWindow{
                         el.printStackTrace();
                     }
                 }
-                setVisible(false);
-                new RootPflow(args);
+                dispose();
+                new HomeFrame(args);
                 
             }
         }.start();

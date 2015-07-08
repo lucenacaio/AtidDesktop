@@ -34,6 +34,9 @@
             <file>file:/C:/Users/Caio/Downloads/Projeto%20ATID/Versão%20antiga/atiddesktop/src/org/atid/editor/commands/SetUnsetSimpleActivityStaticCommand.java</file>
             <file>file:/C:/Users/Caio/Downloads/Projeto%20ATID/Versão%20antiga/atiddesktop/src/org/atid/petrinet/ArcEdge.java</file>
         </group>
-        <group/>
+        <group>
+            <file>file:/Users/caiolucena/Developer/ATIDdesktop/src/org/atid/editor/LoginFrame.java</file>
+            <file>file:/Users/caiolucena/Developer/ATIDdesktop/src/org/atid/editor/LoadFrame.java</file>
+        </group>
     </open-files>
 </project-private>
