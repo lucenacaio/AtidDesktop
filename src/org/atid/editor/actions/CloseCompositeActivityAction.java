@@ -34,7 +34,7 @@ public class CloseCompositeActivityAction extends AbstractAction {
         this.root = root;
         String name = "Close Composite Activity";
         putValue(NAME, name);
-        putValue(SMALL_ICON, GraphicsTools.getIcon("atid/closesubnet.gif"));
+        putValue(SMALL_ICON, GraphicsTools.getIcon("atid/door_closed.png"));
         putValue(SHORT_DESCRIPTION, name);
         putValue(MNEMONIC_KEY, KeyEvent.VK_C);
         setEnabled(false);
