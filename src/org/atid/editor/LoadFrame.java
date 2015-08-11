@@ -51,7 +51,7 @@ public class LoadFrame extends JWindow{
                 for(int i=0; i < 101; i++){
                     try{
                         progressBar.setValue(i);
-                        sleep(100);
+                        sleep(50);
                     } catch(InterruptedException el){
                         el.printStackTrace();
                     }

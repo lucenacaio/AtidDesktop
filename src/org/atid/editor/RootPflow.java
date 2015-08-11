@@ -597,7 +597,7 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
         drawGroup.add(simpleActivity);
         drawGroup.add(transition);
         drawGroup.add(compositeActivity);
-        //drawGroup.add(event);
+        drawGroup.add(event);
         drawGroup.add(repository);
         drawGroup.add(arc);
         drawGroup.add(token);
@@ -625,7 +625,7 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
         toolBar.add(simpleActivity);
         toolBar.add(transition);
        // TO DO fazer com que o evento possa permitir a geração do gráfo
-        //toolBar.add(event);
+        toolBar.add(event);
         toolBar.add(repository);
         
         toolBar.add(compositeActivity);
@@ -653,9 +653,9 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
         drawMenu.setMnemonic('D');
         menuBar.add(drawMenu);
 
-//        JMenu elementMenu = new JMenu("Element");
-//        elementMenu.setMnemonic('l');
-//        menuBar.add(elementMenu);
+        JMenu elementMenu = new JMenu("Element");
+        elementMenu.setMnemonic('l');
+        menuBar.add(elementMenu);
 
         JMenu subnetMenu = new JMenu("Subnet");
         subnetMenu.setMnemonic('S');
