@@ -8,8 +8,12 @@
         </group>
         <group name="Group 20150505-07:23:03">
             <file>file:/C:/Users/Caio/Documents/NetBeansProjects/projeto/AtidDesktop/src/org/atid/editor/RootPflow.java</file>
-            <file>file:/C:/Users/Caio/Documents/NetBeansProjects/projeto/AtidDesktop/src/org/atid/editor/actions/CloseCompositeActivityAction.java</file>
+            <file>file:/C:/Users/Caio/Documents/NetBeansProjects/projeto/AtidDesktop/src/org/atid/editor/LoadFrame.java</file>
+            <file>file:/C:/Users/Caio/Documents/NetBeansProjects/projeto/AtidDesktop/src/org/atid/petrinet/EventNode.java</file>
             <file>file:/C:/Users/Caio/Documents/NetBeansProjects/projeto/AtidDesktop/src/org/atid/editor/MainFrame.java</file>
+            <file>file:/C:/Users/Caio/Documents/NetBeansProjects/projeto/AtidDesktop/src/org/atid/editor/actions/algorithms/CoverabilityGraph.java</file>
+            <file>file:/C:/Users/Caio/Documents/NetBeansProjects/projeto/AtidDesktop/src/org/atid/petrinet/Marking.java</file>
+            <file>file:/C:/Users/Caio/Documents/NetBeansProjects/projeto/AtidDesktop/src/org/atid/petrinet/Event.java</file>
         </group>
     </open-files>
 </project-private>

@@ -16,7 +16,7 @@ import java.util.Set;
 public class EventNode extends Node implements Cloneable {
 
     public Set<SimpleActivityNode> getConnectedSimpleActivityNodes() {
-        Set<SimpleActivityNode> connectedSimpleActivityNodes = new HashSet<SimpleActivityNode>();
+         Set<SimpleActivityNode> connectedSimpleActivityNodes = new HashSet<SimpleActivityNode>();
         for (ArcEdge arc : getConnectedArcEdges()) {
             connectedSimpleActivityNodes.add(arc.getSimpleActivityNode());
         }

@@ -55,7 +55,7 @@ public class CoverabilityGraph extends AbstractAction{
             for(FiringSequence t : marking.getAllFiringSequencesRecursively()){
     
                 for(Transition s : t){
-                    if (marking.isEnabled(s) && !s.isFire()) {
+                    if (marking.isEnabled(s) && !s.isFire() ) {
                         marking.fire(s);
                         generateGraph();
                         marking.undoFire(s);

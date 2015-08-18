@@ -178,19 +178,21 @@ public class Marking {
         try {
             if (isEnabled(transition)) {
                 for (Arc arc : transition.getConnectedArcs()) {
-                    if (arc.isSimpleActivityToTransition()) {
-                        int tokens = getTokens(arc.getSimpleActivityNode());
-                        if (!arc.getType().equals(Arc.INHIBITOR)) {					//inhibitor arc doesnt consume tokens
-                            if (arc.getType().equals(Arc.RESET)) {						//reset arc consumes them all
-                                setTokens(arc.getSimpleActivityNode(), 0);
-                            } else {
-                                setTokens(arc.getSimpleActivityNode(), tokens - arc.getMultiplicity());
+                   if(!(arc.getSource() instanceof Event)){
+                        if (arc.isSimpleActivityToTransition()) {
+                            int tokens = getTokens(arc.getSimpleActivityNode());
+                            if (!arc.getType().equals(Arc.INHIBITOR)) {					//inhibitor arc doesnt consume tokens
+                                if (arc.getType().equals(Arc.RESET)) {						//reset arc consumes them all
+                                    setTokens(arc.getSimpleActivityNode(), 0);
+                                } else {
+                                    setTokens(arc.getSimpleActivityNode(), tokens - arc.getMultiplicity());
+                                }
                             }
+                        } else {
+                            int tokens = getTokens(arc.getSimpleActivityNode());
+                            setTokens(arc.getSimpleActivityNode(), tokens + arc.getMultiplicity());
                         }
-                    } else {
-                        int tokens = getTokens(arc.getSimpleActivityNode());
-                        setTokens(arc.getSimpleActivityNode(), tokens + arc.getMultiplicity());
-                    }
+                   } else continue;
                 }
                 success = true;
             } else {
@@ -207,10 +209,12 @@ public class Marking {
         lock.readLock().lock();
         try {
             for (Arc arc : transition.getConnectedArcs()) {
-                if (!arc.isSimpleActivityToTransition()) {
-                    if (getTokens(arc.getSimpleActivityNode()) < arc.getMultiplicity()) {
-                        canBeUnfired = false;
-                        break;
+                if(!(arc.getSource() instanceof Event)){
+                    if (!arc.isSimpleActivityToTransition()) {
+                        if (getTokens(arc.getSimpleActivityNode()) < arc.getMultiplicity()) {
+                            canBeUnfired = false;
+                            break;
+                        }
                     }
                 }
             }
@@ -225,12 +229,14 @@ public class Marking {
         try {
             if (canBeUnfired(transition)) {
                 for (Arc arc : transition.getConnectedArcs()) {
-                    if (!arc.isSimpleActivityToTransition()) {
-                        int tokens = getTokens(arc.getSimpleActivityNode());
-                        setTokens(arc.getSimpleActivityNode(), tokens - arc.getMultiplicity());
-                    } else {
-                        int tokens = getTokens(arc.getSimpleActivityNode());
-                        setTokens(arc.getSimpleActivityNode(), tokens + arc.getMultiplicity());
+                   if(!(arc.getSource() instanceof Event)){
+                        if (!arc.isSimpleActivityToTransition()) {
+                            int tokens = getTokens(arc.getSimpleActivityNode());
+                            setTokens(arc.getSimpleActivityNode(), tokens - arc.getMultiplicity());
+                        } else {
+                            int tokens = getTokens(arc.getSimpleActivityNode());
+                            setTokens(arc.getSimpleActivityNode(), tokens + arc.getMultiplicity());
+                        }
                     }
                 }
             }
@@ -408,9 +414,9 @@ public class Marking {
         StringBuilder result = new StringBuilder();
         lock.readLock().lock();
         try {
-            result.append("\nSimpleActivitys: ");
+            result.append("\n");
             for (SimpleActivity simpleActivity : petriNet.getRootCompositeActivity().getSimpleActivitysRecursively()) {
-                result.append(simpleActivity.getLabel() + " : " + getTokens(simpleActivity) + " ");
+                result.append(simpleActivity.getLabel() + "   =   " + getTokens(simpleActivity) + "    ");
             }
             if (petriNet.getRootCompositeActivity().getSimpleActivitysRecursively().isEmpty()) {
                 result.append("-NONE-");
