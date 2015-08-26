@@ -45,7 +45,7 @@ public class LexicalAnalyzer {
         "out", "and", "or", "n", "true", "false"}));
         
         this.sinais = new ArrayList<String>(Arrays.asList( new String[]
-            {"=", "<", ">", "!", ".",","}));
+            {"=", "<", ">", "!", "."}));
         
         this.letras = new ArrayList<String>(Arrays.asList( new String[]
             {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k",
@@ -181,14 +181,6 @@ public class LexicalAnalyzer {
         return texto;
     }
     
-    public List<String> getTokensSemTipo(){
-        
-        for (String token1 : tokens) {
-            tokensSemTipo.add(token1.split(",")[0]);
-        }
-        
-        return tokensSemTipo;
-    }
     
     private boolean isSinalDuplo(){
         
