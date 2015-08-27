@@ -35,7 +35,9 @@ public class AddTokenCommand implements Command {
     }
 
     public void execute() {
-        marking.setTokens(simpleActivityNode, marking.getTokens(simpleActivityNode) + 1);
+        if(marking.getTokens(simpleActivityNode) == 0){
+            marking.setTokens(simpleActivityNode, marking.getTokens(simpleActivityNode) + 1);
+        }
     }
 
     public void undo() {

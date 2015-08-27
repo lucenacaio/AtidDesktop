@@ -624,7 +624,6 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
         toolBar.add(select);
         toolBar.add(simpleActivity);
         toolBar.add(transition);
-       // TO DO fazer com que o evento possa permitir a geração do gráfo
         toolBar.add(event);
         toolBar.add(repository);
         
@@ -737,7 +736,7 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
         transitionPopup.add(cutAction);
         transitionPopup.add(copyAction);
         transitionPopup.add(delete);
-        //transitionPopup.add(addCondition);
+        transitionPopup.add(addCondition);
 
         Font boldFont = new Font(Font.SANS_SERIF, Font.BOLD, 12);
 

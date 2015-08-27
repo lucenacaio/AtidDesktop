@@ -46,6 +46,7 @@ public class SetTokensAction extends AbstractAction {
         setEnabled(false);
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         Marking initialMarking = root.getDocument().petriNet.getInitialMarking();
         if (root.getClickedElement() != null) {

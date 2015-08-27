@@ -5,6 +5,7 @@
  */
 package org.atid.editor.actions;
 
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import static javax.swing.Action.ACCELERATOR_KEY;
@@ -17,6 +18,7 @@ import org.atid.editor.Atid;
 import org.atid.editor.Root;
 import org.atid.petrinet.PetriNet;
 import org.atid.petrinet.Transition;
+import org.atid.petrinet.TransitionNode;
 import org.atid.util.CachedGraphics2D;
 import org.atid.util.GraphicsTools;
 
@@ -41,7 +43,7 @@ public class AddConditionAction extends AbstractAction{
         if(root.getClickedElement() != null){
             if(root.getClickedElement() instanceof Transition){
                 Transition transition = (Transition) root.getClickedElement();
-                transition.drawCondition(CachedGraphics2D.getGraphics());
+                transition.drawCondition(CachedGraphics2D.getGraphics(),transition.getStart(),transition.getEnd());
                 JOptionPane.showInputDialog(root.getParentFrame(),"Condition: ");
             }
         }

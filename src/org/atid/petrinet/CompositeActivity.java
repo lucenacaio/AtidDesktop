@@ -39,7 +39,7 @@ public class CompositeActivity extends SimpleActivityNode {
 
     private List<Element> elements = new LinkedList<Element>();
     private Point viewTranslation = new Point(0, 0);
-
+     
     public void writeToFile(File file) throws FileNotFoundException, IOException {
         FileOutputStream fileOut = new FileOutputStream(file);
         ObjectOutputStream objOut = new ObjectOutputStream(fileOut);

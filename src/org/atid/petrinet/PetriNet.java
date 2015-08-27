@@ -42,6 +42,16 @@ public class PetriNet {
     public PetriNet() {
         clear();
     }
+    
+    private static SimpleActivityNode begin = null;
+
+    public static SimpleActivityNode getBegin() {
+        return begin;
+    }
+
+    public static void setBegin(SimpleActivityNode begin) {
+        PetriNet.begin = begin;
+    }
 
     /**
      * Returns the root subnet of the Petri net. It is the only commonly used

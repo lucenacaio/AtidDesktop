@@ -8,6 +8,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.JWindow;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
 import org.atid.util.GraphicsTools;
 
 /**
@@ -45,7 +48,22 @@ public class LoadFrame extends JWindow{
         progressBar.setBounds(0,245,521,20);
         progressBar.setStringPainted(true);
         this.add(progressBar);
-        
+          try {
+        for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+            if ("Nimbus".equals(info.getName())) {
+                UIManager.setLookAndFeel(info.getClassName());
+                break;
+          }
+             }
+} catch (UnsupportedLookAndFeelException e) {
+    // handle exception
+} catch (ClassNotFoundException e) {
+    // handle exception
+} catch (InstantiationException e) {
+    // handle exception
+} catch (IllegalAccessException e) {
+    // handle exception
+}
         new Thread(){
             public void run(){
                 for(int i=0; i < 101; i++){

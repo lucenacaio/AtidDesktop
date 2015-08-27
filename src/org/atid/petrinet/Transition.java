@@ -18,6 +18,9 @@ package org.atid.petrinet;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.geom.Line2D;
 import org.atid.util.GraphicsTools;
 import org.atid.util.GraphicsTools.HorizontalAlignment;
 import org.atid.util.GraphicsTools.VerticalAlignment;
@@ -29,7 +32,7 @@ import org.atid.util.GraphicsTools.VerticalAlignment;
  */
 public class Transition extends TransitionNode implements Cloneable {
 
-    private Graphics g = null;
+    private Graphics graph = null;
     
     public Transition(){
         setSize(14, 32);
@@ -37,6 +40,7 @@ public class Transition extends TransitionNode implements Cloneable {
     
     @Override
     public void draw(Graphics g, DrawingOptions drawingOptions) {
+        graph = g;
         g.setColor(Color.white);
         g.fillRect(getStart().x, getStart().y, getWidth(), getHeight());
         g.setColor(color);
@@ -45,10 +49,10 @@ public class Transition extends TransitionNode implements Cloneable {
         
     }
     
-    public void drawCondition(Graphics g){
+    public void drawCondition(Graphics g, Point start, Point end){
 
         g.drawLine(getStart().x,getStart().y, 
-                getEnd().x, getEnd().y);
+                getWidth(), getHeight());
         
     }
     
@@ -63,6 +67,6 @@ public class Transition extends TransitionNode implements Cloneable {
     }
     
     public Graphics getG(){
-        return g;
+        return graph;
     }
 }

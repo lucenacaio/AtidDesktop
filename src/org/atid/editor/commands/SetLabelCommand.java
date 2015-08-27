@@ -16,7 +16,12 @@
  */
 package org.atid.editor.commands;
 
+import javax.swing.JOptionPane;
+import org.atid.editor.Atid;
+import org.atid.petrinet.Marking;
 import org.atid.petrinet.Node;
+import org.atid.petrinet.PetriNet;
+import org.atid.petrinet.SimpleActivityNode;
 import org.atid.util.Command;
 
 /**
@@ -31,8 +36,21 @@ public class SetLabelCommand implements Command {
     private String oldLabel;
 
     public SetLabelCommand(Node node, String newLabel) {
-        this.node = node;
-        this.newLabel = newLabel;
+        if(newLabel.toLowerCase().equals("begin") && PetriNet.getBegin() == null){
+            this.node = node;
+            this.newLabel = newLabel;
+            SimpleActivityNode nodeConvert = (SimpleActivityNode) node;
+            PetriNet.setBegin(nodeConvert);
+            Marking initialMarking = Atid.getRoot().getCurrentMarking();
+            Atid.getRoot().getUndoManager().executeCommand(new AddTokenCommand(nodeConvert, initialMarking));
+        }else if(newLabel.toLowerCase().equals("begin") && PetriNet.getBegin() != null){
+            JOptionPane.showMessageDialog(null, "There is already a 'begin 'activity on the network.");
+        } 
+        else{
+            this.node = node;
+            this.newLabel = newLabel;
+        }
+            
     }
 
     public void execute() {
