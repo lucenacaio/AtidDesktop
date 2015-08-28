@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 import org.atid.petrinet.Arc;
 import org.atid.petrinet.ArcEdge;
+import org.atid.petrinet.PetriNet;
 import org.atid.petrinet.SimpleActivityNode;
 import org.atid.petrinet.ReferenceArc;
 import org.atid.util.Command;
@@ -51,12 +52,19 @@ public class DeleteSimpleActivityNodeCommand implements Command {
         for (Command deleteArc : deleteAllArcEdges) {
             deleteArc.execute();
         }
+        if(simpleActivityNode == PetriNet.getNewBegin()){
+            PetriNet.setOldBegin(PetriNet.getNewBegin());
+            PetriNet.setNewBegin(null);
+        }
         simpleActivityNode.getParentCompositeActivity().removeElement(simpleActivityNode);
     }
 
     public void undo() {
         for (Command deleteArc : deleteAllArcEdges) {
             deleteArc.undo();
+        }
+        if(simpleActivityNode == PetriNet.getOldBegin()){
+            PetriNet.setNewBegin(PetriNet.getOldBegin());
         }
         simpleActivityNode.getParentCompositeActivity().addElement(simpleActivityNode);
     }

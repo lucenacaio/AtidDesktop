@@ -86,7 +86,7 @@ class ArcFeature implements Feature {
 
         if (started) {
             if (targetElement != null && (sourceElement instanceof SimpleActivityNode && targetElement instanceof TransitionNode
-                    || sourceElement instanceof TransitionNode && targetElement instanceof SimpleActivityNode && targetElement != PetriNet.getBegin() ||
+                    || sourceElement instanceof TransitionNode && targetElement instanceof SimpleActivityNode && targetElement != PetriNet.getNewBegin() ||
                     sourceElement instanceof EventNode && targetElement instanceof TransitionNode
                     || sourceElement instanceof SimpleActivityNode && targetElement instanceof RepositoryNode
                     || sourceElement instanceof RepositoryNode && targetElement instanceof SimpleActivityNode
@@ -118,7 +118,7 @@ class ArcFeature implements Feature {
                
                 if (targetElement != null) {
                     if (sourceElement instanceof SimpleActivityNode && targetElement instanceof TransitionNode
-                            || sourceElement instanceof TransitionNode && targetElement instanceof SimpleActivityNode && targetElement != PetriNet.getBegin()
+                            || sourceElement instanceof TransitionNode && targetElement instanceof SimpleActivityNode && targetElement != PetriNet.getNewBegin()
                             || sourceElement instanceof EventNode && targetElement instanceof TransitionNode
                             || sourceElement instanceof RepositoryNode && targetElement instanceof SimpleActivityNode && !(targetElement instanceof CompositeActivity)
                             || sourceElement instanceof SimpleActivityNode && !(sourceElement instanceof CompositeActivity) && targetElement instanceof RepositoryNode) {
@@ -204,7 +204,7 @@ class ArcFeature implements Feature {
                     Atid.getRoot().repaintCanvas();
                 } else { // Connecting to solid element
                     if (sourceElement instanceof SimpleActivityNode && targetElement instanceof TransitionNode
-                            || sourceElement instanceof TransitionNode && targetElement instanceof SimpleActivityNode && targetElement != PetriNet.getBegin()
+                            || sourceElement instanceof TransitionNode && targetElement instanceof SimpleActivityNode && targetElement != PetriNet.getNewBegin()
                             || sourceElement instanceof EventNode && targetElement instanceof TransitionNode
                             || sourceElement instanceof SimpleActivityNode && targetElement instanceof RepositoryNode
                             || sourceElement instanceof RepositoryNode && targetElement instanceof SimpleActivityNode

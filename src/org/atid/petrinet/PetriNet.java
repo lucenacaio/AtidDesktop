@@ -43,14 +43,23 @@ public class PetriNet {
         clear();
     }
     
-    private static SimpleActivityNode begin = null;
+    private static SimpleActivityNode newBegin = null;
+    private static SimpleActivityNode oldBegin = null;
 
-    public static SimpleActivityNode getBegin() {
-        return begin;
+    public static SimpleActivityNode getOldBegin() {
+        return oldBegin;
     }
 
-    public static void setBegin(SimpleActivityNode begin) {
-        PetriNet.begin = begin;
+    public static void setOldBegin(SimpleActivityNode oldBegin) {
+        PetriNet.oldBegin = oldBegin;
+    }
+
+    public static SimpleActivityNode getNewBegin() {
+        return newBegin;
+    }
+
+    public static void setNewBegin(SimpleActivityNode begin) {
+        PetriNet.newBegin = begin;
     }
 
     /**

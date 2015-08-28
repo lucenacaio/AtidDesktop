@@ -42,16 +42,17 @@ public class SetLabelCommand implements Command {
 
     public void execute() {
         SimpleActivityNode nodeConvert = (SimpleActivityNode) node;
-        if(PetriNet.getBegin() == null && newLabel.toLowerCase().equals("begin")){
+        if(PetriNet.getNewBegin() == null && newLabel.toLowerCase().equals("begin")){
             this.oldLabel = node.getLabel();
             node.setLabel(newLabel);
-            PetriNet.setBegin(nodeConvert);
+            PetriNet.setOldBegin(PetriNet.getNewBegin());
+            PetriNet.setNewBegin(nodeConvert);
             Marking initialMarking = Atid.getRoot().getCurrentMarking();
             Atid.getRoot().getUndoManager().executeCommand(new AddTokenCommand(nodeConvert, initialMarking));
-        } else if(PetriNet.getBegin() != null && newLabel.toLowerCase().equals("begin")){
+        } else if(PetriNet.getNewBegin() != null && newLabel.toLowerCase().equals("begin")){
             JOptionPane.showMessageDialog(null, "There is already a 'begin 'activity on the network.");
-        } else if(node == PetriNet.getBegin() && !newLabel.toLowerCase().equals("begin")){
-            PetriNet.setBegin(null);
+        } else if(node == PetriNet.getNewBegin() && !newLabel.toLowerCase().equals("begin")){
+            PetriNet.setNewBegin(null);
             Marking initialMarking = Atid.getRoot().getCurrentMarking();
             Atid.getRoot().getUndoManager().executeCommand(new RemoveTokenCommand(nodeConvert, initialMarking));
             this.oldLabel = node.getLabel();
@@ -64,7 +65,14 @@ public class SetLabelCommand implements Command {
     }
 
     public void undo() {
-        node.setLabel(oldLabel);
+       SimpleActivityNode nodeConvert = (SimpleActivityNode) node;
+        if(nodeConvert == PetriNet.getNewBegin()){
+            PetriNet.setNewBegin(PetriNet.getOldBegin());
+            node.setLabel(oldLabel);
+        }else{
+            node.setLabel(oldLabel);
+        }   
+            
     }
 
     public void redo() {

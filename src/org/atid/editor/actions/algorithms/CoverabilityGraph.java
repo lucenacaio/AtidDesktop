@@ -37,13 +37,17 @@ public class CoverabilityGraph extends AbstractAction{
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-            sb = new StringBuilder();
-            sb.append("Converability Graph");
-            loadAllLists();
-            generateGraph();
-            JOptionPane.showMessageDialog(Atid.getRoot().getParentFrame(), sb.toString()
-            ,"Information", JOptionPane.INFORMATION_MESSAGE 
-            );
+            if(PetriNet.getNewBegin() != null){
+                sb = new StringBuilder();
+                sb.append("Converability Graph");
+                loadAllLists();
+                generateGraph();
+                JOptionPane.showMessageDialog(Atid.getRoot().getParentFrame(), sb.toString()
+                ,"Information", JOptionPane.INFORMATION_MESSAGE 
+                );
+            } else{
+                JOptionPane.showMessageDialog(null, "PetrinNet Error! Add an 'Begin' activity to generate the graphic." );
+            }
            
     }
         
