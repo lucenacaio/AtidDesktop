@@ -33,6 +33,15 @@ import org.atid.util.GraphicsTools.VerticalAlignment;
 public class Transition extends TransitionNode implements Cloneable {
 
     private Graphics graph = null;
+    private boolean rest = false;
+
+    public boolean isRest() {
+        return rest;
+    }
+
+    public void setRest(boolean rest) {
+        this.rest = rest;
+    }
     
     public Transition(){
         setSize(14, 32);
@@ -46,13 +55,19 @@ public class Transition extends TransitionNode implements Cloneable {
         g.setColor(color);
         g.drawRect(getStart().x, getStart().y, getWidth() - 1, getHeight() - 1);
         drawLabel(g);
+        if(rest){
+            g.setColor(Color.RED);
+            g.drawLine(getStart().x, getStart().y, getStart().x +13 , getEnd().y - 1);
+        }
+        
+
         
     }
     
-    public void drawCondition(Graphics g, Point start, Point end){
+    public void drawCondition(Graphics g, Transition t){
 
-        g.drawLine(getStart().x,getStart().y, 
-                getWidth(), getHeight());
+        System.out.println(t.getLabel());
+        t.graph.setColor(Color.GREEN);
         
     }
     

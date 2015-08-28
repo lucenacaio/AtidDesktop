@@ -30,6 +30,8 @@ public class LoginFrame extends JWindow {
         txtPassword = new javax.swing.JPasswordField();
         btSignIn = new javax.swing.JButton();
         btCancel = new javax.swing.JButton();
+        txtUser.setEnabled(true);
+        txtUser.setEditable(true);
 
 
 

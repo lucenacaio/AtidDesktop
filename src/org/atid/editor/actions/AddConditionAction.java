@@ -7,6 +7,7 @@ package org.atid.editor.actions;
 
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
+import java.util.List;
 import javax.swing.AbstractAction;
 import static javax.swing.Action.ACCELERATOR_KEY;
 import static javax.swing.Action.NAME;
@@ -14,6 +15,7 @@ import static javax.swing.Action.SHORT_DESCRIPTION;
 import static javax.swing.Action.SMALL_ICON;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
+import org.atid.compiler.LexicalAnalyzer;
 import org.atid.editor.Atid;
 import org.atid.editor.Root;
 import org.atid.petrinet.PetriNet;
@@ -43,11 +45,32 @@ public class AddConditionAction extends AbstractAction{
         if(root.getClickedElement() != null){
             if(root.getClickedElement() instanceof Transition){
                 Transition transition = (Transition) root.getClickedElement();
-                transition.drawCondition(CachedGraphics2D.getGraphics(),transition.getStart(),transition.getEnd());
-                JOptionPane.showInputDialog(root.getParentFrame(),"Condition: ");
-            }
+                
+                String condition = JOptionPane.showInputDialog(root.getParentFrame(),"Condition: ");
+                if(!condition.equals("")){
+                    transition.setRest(true);
+                    JOptionPane.showMessageDialog(root.getParentFrame(), analiser(condition).toString());
+                    Atid.getRoot().getDrawingBoard().repaint();
+                }else{
+                    JOptionPane.showMessageDialog(root.getParentFrame(), "The condition can not be empty.");
+                }
+           }
         }
         
         
+    }
+    
+    public StringBuilder analiser(String condition){
+        StringBuilder sb = new StringBuilder();
+        LexicalAnalyzer lexico = new LexicalAnalyzer();
+        lexico.analisar(condition);
+        
+        List<String> lista = lexico.getTokens();
+        
+        for (String token : lista){
+            
+            sb.append(token + "\n");
+        }
+        return sb;
     }
 }
