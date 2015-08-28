@@ -19,6 +19,7 @@ package org.atid.editor.commands;
 import org.atid.petrinet.Arc;
 import org.atid.petrinet.CompositeActivity;
 import org.atid.petrinet.EventNode;
+import org.atid.petrinet.PetriNet;
 import org.atid.petrinet.RepositoryNode;
 import org.atid.petrinet.SimpleActivityNode;
 import org.atid.petrinet.Transition;

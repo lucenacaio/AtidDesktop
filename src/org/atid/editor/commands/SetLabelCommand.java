@@ -36,26 +36,31 @@ public class SetLabelCommand implements Command {
     private String oldLabel;
 
     public SetLabelCommand(Node node, String newLabel) {
-        if(newLabel.toLowerCase().equals("begin") && PetriNet.getBegin() == null){
             this.node = node;
             this.newLabel = newLabel;
-            SimpleActivityNode nodeConvert = (SimpleActivityNode) node;
-            PetriNet.setBegin(nodeConvert);
-            Marking initialMarking = Atid.getRoot().getCurrentMarking();
-            Atid.getRoot().getUndoManager().executeCommand(new AddTokenCommand(nodeConvert, initialMarking));
-        }else if(newLabel.toLowerCase().equals("begin") && PetriNet.getBegin() != null){
-            JOptionPane.showMessageDialog(null, "There is already a 'begin 'activity on the network.");
-        } 
-        else{
-            this.node = node;
-            this.newLabel = newLabel;
-        }
-            
     }
 
     public void execute() {
-        this.oldLabel = node.getLabel();
-        node.setLabel(newLabel);
+        SimpleActivityNode nodeConvert = (SimpleActivityNode) node;
+        if(PetriNet.getBegin() == null && newLabel.toLowerCase().equals("begin")){
+            this.oldLabel = node.getLabel();
+            node.setLabel(newLabel);
+            PetriNet.setBegin(nodeConvert);
+            Marking initialMarking = Atid.getRoot().getCurrentMarking();
+            Atid.getRoot().getUndoManager().executeCommand(new AddTokenCommand(nodeConvert, initialMarking));
+        } else if(PetriNet.getBegin() != null && newLabel.toLowerCase().equals("begin")){
+            JOptionPane.showMessageDialog(null, "There is already a 'begin 'activity on the network.");
+        } else if(node == PetriNet.getBegin() && !newLabel.toLowerCase().equals("begin")){
+            PetriNet.setBegin(null);
+            Marking initialMarking = Atid.getRoot().getCurrentMarking();
+            Atid.getRoot().getUndoManager().executeCommand(new RemoveTokenCommand(nodeConvert, initialMarking));
+            this.oldLabel = node.getLabel();
+            node.setLabel(newLabel);
+        }else if(!newLabel.toLowerCase().equals("begin")){
+            this.oldLabel = node.getLabel();
+            node.setLabel(newLabel);
+        }
+        
     }
 
     public void undo() {
