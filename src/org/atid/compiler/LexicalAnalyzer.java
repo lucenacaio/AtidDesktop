@@ -16,19 +16,19 @@ import java.util.List;
 public class LexicalAnalyzer {
     
     //Palavras Reservadas da Gramatica
-    private List<String> palavrasReservadas;
+    private List<String> keywords;
     
     //Sinais da Gramatica
-    private List<String> sinais;
+    private List<String> operators;
     
     //Letras da Gramatica
-    private List<String> letras;
+    private List<String> letters;
     
     //Digitos da Gramatica
-    private List<String> digitos;
+    private List<String> digits;
     
+    private char[] symbols;
     
-    private char[] simbolos;
     //String para armazenar cada token encontrado
     private StringBuilder token;
     //Lista de tokens encontrados
@@ -36,114 +36,112 @@ public class LexicalAnalyzer {
     //Contador do index
     private int index = 0;
     
-    private List<String> tokensSemTipo;
 
     public LexicalAnalyzer() {
         
-        this.palavrasReservadas = new ArrayList<String>(Arrays.asList(
+        this.keywords = new ArrayList<String>(Arrays.asList(
             new String[]{"not", "dataAtual", "p", "di", "df", "in",
         "out", "and", "or", "n", "true", "false"}));
         
-        this.sinais = new ArrayList<String>(Arrays.asList( new String[]
+        this.operators = new ArrayList<String>(Arrays.asList( new String[]
             {"=", "<", ">", "!", "."}));
         
-        this.letras = new ArrayList<String>(Arrays.asList( new String[]
+        this.letters = new ArrayList<String>(Arrays.asList( new String[]
             {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k",
         "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "x", "z", "w"}));
         
-        this.digitos = new ArrayList<String>(Arrays.asList( new String[]
+        this.digits = new ArrayList<String>(Arrays.asList( new String[]
             {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}));
         
         this.token = new StringBuilder();
         this.tokens = new ArrayList<String>();
-        this.tokensSemTipo = new ArrayList<String>();
         
     }
     
-    public boolean analisar(String valor){
+    public boolean analyze(String value){
         
-        String texto = tratarTexto(valor);
-        simbolos = texto.toCharArray();
+        String text = prepareText(value);
+        symbols = text.toCharArray();
         
-        for (char s : simbolos){
+        for (char s : symbols){
             
-            String simbolo = String.valueOf(s);
+            String symbol = String.valueOf(s);
             
-            if (isLetra(simbolo)){
+            if (isLetter(symbol)){
                 
-                if ( (token.length() != 0) && (isSinal(String.valueOf(token.toString().charAt(0)))) ){
-                    adicionarToken(TipoTokenEnum.SINAL.name());
+                if ( (token.length() != 0) && (isOperator(String.valueOf(token.toString().charAt(0)))) ){
+                    addToken(TokenTypesEnum.OPERATOR.name());
                 }
                 
-                else if ( (token.length() != 0) && (isDigito(String.valueOf(token.toString().charAt(0)))) ){
+                else if ( (token.length() != 0) && (isDigit(String.valueOf(token.toString().charAt(0)))) ){
                     return false;
                 }
                 
-                token.append(simbolo);
+                token.append(symbol);
                 
-                if ( isUltimoSimbolo() ) analisarPalavra();
+                if ( isLastSymbol() ) analyzeWord();
                 
             }
-            else if (isDigito(simbolo)){
-                //Se tiver valor no token e for um sinal, ele deve ser adicionado a lista de tokens
-                if ( (token.length() != 0) && (isSinal(String.valueOf(token.toString().charAt(0)))) ){
-                    adicionarToken(TipoTokenEnum.SINAL.name());
+            else if (isDigit(symbol)){
+                //Se tiver value no token e for um sinal, ele deve ser adicionado a lista de tokens
+                if ( (token.length() != 0) && (isOperator(String.valueOf(token.toString().charAt(0)))) ){
+                    addToken(TokenTypesEnum.OPERATOR.name());
                 }
-                token.append(simbolo);
-                //Se o simbolo for o ultimo do array, ele é adicionado a lista de tokens
-                if ( (isUltimoSimbolo()) && (isDigito(String.valueOf(token.toString().charAt(0)))) ){
-                    adicionarToken(TipoTokenEnum.NUM.name());
+                token.append(symbol);
+                //Se o symbol for o ultimo do array, ele é adicionado a lista de tokens
+                if ( (isLastSymbol()) && (isDigit(String.valueOf(token.toString().charAt(0)))) ){
+                    addToken(TokenTypesEnum.NUM.name());
                 }
-                else if ( (isUltimoSimbolo()) && (isLetra(String.valueOf(token.toString().charAt(0)))) ){
-                    analisarPalavra();
+                else if ( (isLastSymbol()) && (isLetter(String.valueOf(token.toString().charAt(0)))) ){
+                    analyzeWord();
                 }
             }
             
-            else if (isSinal(simbolo)){
+            else if (isOperator(symbol)){
                 
-                if ( isUltimoSimbolo() ) {
-                    token.append(simbolo);
-                    adicionarToken(TipoTokenEnum.SINAL.name());
+                if ( isLastSymbol() ) {
+                    token.append(symbol);
+                    addToken(TokenTypesEnum.OPERATOR.name());
                 }
                 
-                else if ( (token.length() != 0) && (isSinal(String.valueOf(token.toString().charAt(0)))) ){
+                else if ( (token.length() != 0) && (isOperator(String.valueOf(token.toString().charAt(0)))) ){
                     
-                    token.append(simbolo);
+                    token.append(symbol);
                     
-                    if (isSinalDuplo()) adicionarToken(TipoTokenEnum.SINAL.name());
+                    if (isDoubleOperator()) addToken(TokenTypesEnum.OPERATOR.name());
                     
                     else{
                         token.deleteCharAt(token.length()-1);
-                        adicionarToken(TipoTokenEnum.SINAL.name());
-                        token.append(simbolo);
-                        adicionarToken(TipoTokenEnum.SINAL.name());
+                        addToken(TokenTypesEnum.OPERATOR.name());
+                        token.append(symbol);
+                        addToken(TokenTypesEnum.OPERATOR.name());
                     }
                 } 
                 
-                else if ( (token.length() != 0) && (isLetra(String.valueOf(token.toString().charAt(0)))) ){
-                    analisarPalavra();
-                    token.append(simbolo);
+                else if ( (token.length() != 0) && (isLetter(String.valueOf(token.toString().charAt(0)))) ){
+                    analyzeWord();
+                    token.append(symbol);
                 }
                 
-                else if ( (token.length() != 0) && (isDigito(String.valueOf(token.toString().charAt(0)))) ){
-                    adicionarToken(TipoTokenEnum.NUM.name());
-                    token.append(simbolo);
+                else if ( (token.length() != 0) && (isDigit(String.valueOf(token.toString().charAt(0)))) ){
+                    //adicionarToken(TokenTypesEnum.NUM.name());
+                    token.append(symbol);
                 }
                 
-                else token.append(simbolo);
+                else token.append(symbol);
             }
             
-            else if (isEspaco(simbolo)){
+            else if (isSpace(symbol)){
                 
-                if ( (token.length() != 0) && (isLetra(String.valueOf(token.toString().charAt(0)))) ){
-                    analisarPalavra();
+                if ( (token.length() != 0) && (isLetter(String.valueOf(token.toString().charAt(0)))) ){
+                    analyzeWord();
                 }
-                else if ( (token.length() != 0) && (isDigito(String.valueOf(token.toString().charAt(0)))) ){
-                    adicionarToken(TipoTokenEnum.NUM.name());
+                else if ( (token.length() != 0) && (isDigit(String.valueOf(token.toString().charAt(0)))) ){
+                    addToken(TokenTypesEnum.NUM.name());
                 }
                 
-                else if ( (token.length() != 0) && (isSinal(String.valueOf(token.toString().charAt(0)))) ){
-                    adicionarToken(TipoTokenEnum.SINAL.name());
+                else if ( (token.length() != 0) && (isOperator(String.valueOf(token.toString().charAt(0)))) ){
+                    addToken(TokenTypesEnum.OPERATOR.name());
                 }
             }
             
@@ -155,18 +153,18 @@ public class LexicalAnalyzer {
         return true;
     }
     
-    private void analisarPalavra(){
+    private void analyzeWord(){
         
-        if (isPalavraReservada(token.toString())){
-            adicionarToken(TipoTokenEnum.PALAVRARESERVADA.name());
+        if (isKeyword(token.toString())){
+            addToken(TokenTypesEnum.KEYWORD.name());
         }
         
         else{
-            adicionarToken(TipoTokenEnum.ID.name());
+            addToken(TokenTypesEnum.ID.name());
         }
     }
     
-    private void adicionarToken(String tipo){
+    private void addToken(String tipo){
         token.append(",");
         token.append(tipo);
         tokens.add(token.toString());
@@ -174,57 +172,57 @@ public class LexicalAnalyzer {
         token.delete(0, token.length());
     }
     
-    private String tratarTexto(String valor){
-        String texto = valor.replaceAll("\n", " ");
-        texto = texto.replaceAll("\t", " ");
+    private String prepareText(String value){
+        String text = value.replaceAll("\n", " ");
+        text = text.replaceAll("\t", " ");
         
-        return texto;
+        return text;
     }
     
     
-    private boolean isSinalDuplo(){
+    private boolean isDoubleOperator(){
         
-        String sinal1 = String.valueOf(token.toString().charAt(0));
-        String sinal2 = String.valueOf(token.toString().charAt(1));
+        String operator1 = String.valueOf(token.toString().charAt(0));
+        String operator2 = String.valueOf(token.toString().charAt(1));
         
-        if ( (sinal1.equals(">")) && (sinal2.equals("="))) {
+        if ( (operator1.equals(">")) && (operator2.equals("="))) {
             return true;
         }
-        else if ( (sinal1.equals("<")) && (sinal2.equals("=")) ){
+        else if ( (operator1.equals("<")) && (operator2.equals("=")) ){
             return true;
         }
-        else if ( (sinal1.equals("!")) && (sinal2.equals("=")) ){
+        else if ( (operator1.equals("!")) && (operator2.equals("=")) ){
             return true;
         }
         
         return false;
     }
     
-    private boolean isEspaco(String valor){
+    private boolean isSpace(String valor){
         return (valor.equals(" "));
     }
     
-    private boolean isLetra(String valor){
-        return (letras.contains(valor.toLowerCase()));
+    private boolean isLetter(String valor){
+        return (letters.contains(valor.toLowerCase()));
     }
     
-    private boolean isSinal(String valor){
-        return (sinais.contains(valor));
+    private boolean isOperator(String valor){
+        return (operators.contains(valor));
     }
     
-    private boolean isDigito(String valor){
-        return (digitos.contains((valor)));
+    private boolean isDigit(String valor){
+        return (digits.contains((valor)));
     }
     
-    private boolean isPalavraReservada(String valor){
-        return (palavrasReservadas.contains(valor));
+    private boolean isKeyword(String valor){
+        return (keywords.contains(valor));
     }
     
     public List<String> getTokens(){
         return tokens;
     }
     
-    private boolean isUltimoSimbolo(){
-        return (index == simbolos.length-1);
+    private boolean isLastSymbol(){
+        return (index == symbols.length-1);
     }
 }

@@ -12,6 +12,9 @@
             <file>file:/C:/Users/Caio/Documents/NetBeansProjects/projeto/AtidDesktop/src/org/atid/petrinet/Event.java</file>
         </group>
         <group>
+            <file>file:/C:/Users/Fabricia/AtidDesktop/src/org/atid/compiler/CompilerATID.java</file>
+            <file>file:/C:/Users/Fabricia/AtidDesktop/src/org/atid/compiler/TokenTypesEnum.java</file>
+            <file>file:/C:/Users/Fabricia/AtidDesktop/src/org/atid/editor/actions/AddConditionAction.java</file>
             <file>file:/C:/Users/Fabricia/AtidDesktop/src/org/atid/compiler/Parser.java</file>
             <file>file:/C:/Users/Fabricia/AtidDesktop/src/org/atid/compiler/LexicalAnalyzer.java</file>
         </group>

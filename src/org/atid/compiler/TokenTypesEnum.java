@@ -9,8 +9,8 @@ package org.atid.compiler;
  *
  * @author Fabricia
  */
-public enum TipoTokenEnum {
+public enum TokenTypesEnum {
     
-    ID, NUM, PALAVRARESERVADA, SINAL;
+    ID, NUM, KEYWORD, OPERATOR;
     
 }

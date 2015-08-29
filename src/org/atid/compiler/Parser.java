@@ -14,51 +14,71 @@ import java.util.List;
  */
 public class Parser {
     
-    private List<String> tiposTokens;
-    private List<String> tokensSemTipo;
+    private List<String> tokenTypes;
+    private List<String> tokens;
     private int index = 0;
     
-    public boolean analisar(ArrayList<String> tokens){
-        this.tiposTokens = this.getTiposTokens(tokens);
-        this.tokensSemTipo = this.getTokensSemTipo(tokens);
-        return S(index);
+    public Parser(){
+        this.tokenTypes = new ArrayList<String>();
+        this.tokens = new ArrayList<String>();
     }
     
-    private boolean S(int index){
+    public boolean analyze(List<String> listToken){
+        this.tokenTypes = this.getTokenTypes(listToken);
+        this.tokens = this.getTokens(listToken);
+        return S();
+    }
+    
+    private boolean S(){
         
-        if (tokensSemTipo.get(index).equals("not")) return A(index++);
-        else return A(index);
+        if (tokens.get(index).equals("not")){
+            index++;
+            return (A());
+        }
+        else{
+            return (A());
+        }
 
     }
     
-    private boolean A(int index){
+    private boolean A(){
         
-        if (tiposTokens.get(index).equals("ID")){
-            if (tokensSemTipo.get(++index).equals(".")) return G(++index);
+        if (tokenTypes.get(index).equals(TokenTypesEnum.ID.name())){
+            index++;
+            if (tokens.get(index).equals(".")){
+                index++;
+                return G();
+            }
             else return false;
         }
         
-        else if (tokensSemTipo.get(index).equals("dataAtual")){
-            return (A1(++index) && C(index));
+        else if (tokens.get(index).equals("dataAtual")){
+            index++;
+            return (A1() && C());
         }
         
         return false;
     }
     
-    private boolean A1(int index){
+    private boolean A1(){
         
-        if (tiposTokens.get(index).equals("SINAL") && !(tokensSemTipo.get(index).equals("."))){
-            return A2(++index);
+        if (tokenTypes.get(index).equals(TokenTypesEnum.OPERATOR.name()) &&
+                !(tokens.get(index).equals("."))){
+            index++;
+            return A2();
         }
         else return false;
         
     }
     
-    private boolean A2(int index){
+    private boolean A2(){
         
-        if (tiposTokens.get(index).equals("ID")){
-            
-            if(tokensSemTipo.get(++index).equals(".")) return A3(++index);
+        if (tokenTypes.get(index).equals(TokenTypesEnum.ID.name())){
+            index++;
+            if(tokens.get(index).equals(".")){
+                index++;
+                return A3();
+            }
             else return false;
             
         }
@@ -67,82 +87,113 @@ public class Parser {
         
     }
     
-    private boolean A3(int index){
+    private boolean A3(){
         
-        return (tokensSemTipo.get(index).equals("di")) || 
-                (tokensSemTipo.get(index).equals("df"));
+        if ((tokens.get(index).equals("di")) || 
+                (tokens.get(index).equals("df"))){
+            index++;
+            return true;
+        }
+        else return false;
         
     }
     
-    private boolean B(int index){
+    private boolean B(){
         
-        if (tiposTokens.get(index).equals("SINAL") && !(tokensSemTipo.get(index).equals("."))){
-            return D(++index);
+        if (tokenTypes.get(index).equals(TokenTypesEnum.OPERATOR.name()) && !(tokens.get(index).equals("."))){
+            index++;
+            return D();
         }
         else return false;
         
     }
     
     
-    private boolean C(int index){
+    private boolean C(){
         
-        if ((tokensSemTipo.get(index).equals("and")) || 
-                (tokensSemTipo.get(index).equals("or"))) return S(++index);
+        if (index == (tokens.size())) return true;
         
-        else return (index == tokensSemTipo.size()-1);
+        else if ((tokens.get(index).equals("and")) || 
+                (tokens.get(index).equals("or"))){
+            index++;
+            return S();
+        }
+        
+        else return false;
     }
     
-    private boolean D(int index){
+    private boolean D(){
         
-        if (tiposTokens.get(index).equals("NUM")) return true;
+        if (tokenTypes.get(index).equals(TokenTypesEnum.NUM.name())){
+            index++;
+            return true;
+        }
         
-        else if (tiposTokens.get(index).equals("ID")){
-            return ((tokensSemTipo.get(++index).equals(".")) && 
-                    (tokensSemTipo.get(++index).equals("n")));
+        else if (tokenTypes.get(index).equals(TokenTypesEnum.ID.name())){
+            index++;
+            if ((tokens.get(index).equals(".")) && 
+                    (tokens.get(++index).equals("n"))){
+                index++;
+                return true;
+            }
+            else return false;
         }
         
         return false;
     }
     
-    private boolean E(int index){
+    private boolean E(){
         
-        return ((tokensSemTipo.get(index).equals("true")) ||
-                tokensSemTipo.get(index).equals("false"));
-
+        if ((tokens.get(index).equals("true")) ||
+                tokens.get(index).equals("false")){
+            index++;
+            return true;
+        }
+        
+        else return false;
     }
 
     
-    private boolean G(int index){
+    private boolean G(){
         
-        if (tokensSemTipo.get(index).equals("n")) return (B(++index) && C(index));
+        if (tokens.get(index).equals("n")){
+            index++;
+            return (B() && C());
+        }
         
-        else if ((tokensSemTipo.get(index).equals("p")) && 
-                (tokensSemTipo.get(++index).equals("="))) return (E(++index) && C(index));
+        else if ((tokens.get(index).equals("p")) && 
+                (tokens.get(++index).equals("="))){
+            index++;
+            return (E() && C());
+        }
         
-        else if ((tokensSemTipo.get(index).equals("in")) || 
-                (tokensSemTipo.get(index).equals("out"))) {
+        else if ((tokens.get(index).equals("in")) || 
+                (tokens.get(index).equals("out"))) {
             
-            if (tokensSemTipo.get(++index).equals("=")) return (E(++index) && C(index));
+            if (tokens.get(++index).equals("=")){
+                index++;
+                return (E() && C());
+            }
         }
         
         return false;
     }
     
-    public List<String> getTokensSemTipo(ArrayList<String> tokens){
+    public List<String> getTokens(List<String> tokens){
         
         for (String token1 : tokens) {
-            tokensSemTipo.add(token1.split(",")[0]);
+            this.tokens.add(token1.split(",")[0]);
         }
         
-        return tokensSemTipo;
+        return this.tokens;
     }
     
-    public List<String> getTiposTokens(ArrayList<String> tokens){
-        
+    public List<String> getTokenTypes(List<String> tokens){
+
         for (String token1 : tokens) {
-            tokensSemTipo.add(token1.split(",")[1]);
+            tokenTypes.add(token1.split(",")[1]);
         }
         
-        return tokensSemTipo;
+        return tokenTypes;
     }
 }

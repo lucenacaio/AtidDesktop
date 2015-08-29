@@ -63,7 +63,7 @@ public class AddConditionAction extends AbstractAction{
     public StringBuilder analiser(String condition){
         StringBuilder sb = new StringBuilder();
         LexicalAnalyzer lexico = new LexicalAnalyzer();
-        lexico.analisar(condition);
+        lexico.analyze(condition);
         
         List<String> lista = lexico.getTokens();
         

@@ -5,9 +5,6 @@
  */
 package org.atid.compiler;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -25,16 +22,23 @@ public class CompilerATID {
         
         System.out.println("Digite o trecho de codigo:\n");
         String trecho = sc.nextLine();
+        trecho = trecho.replace(',', '.');
         
         LexicalAnalyzer lexico = new LexicalAnalyzer();
-        lexico.analisar(trecho);
-        
-        List<String> lista = lexico.getTokens();
-        
-        for (String token : lista){
-            
-            System.out.println(token);
+        Parser sintatico = new Parser();
+        if (lexico.analyze(trecho)){
+            for(String n : lexico.getTokens()){
+                System.out.println(n);
+            }
+            System.out.println(sintatico.analyze(lexico.getTokens()));
         }
+        
+//        List<String> lista = lexico.getTokens();
+//        
+//        for (String token : lista){
+//            
+//            System.out.println(token);
+//        }
         
     }
     
