@@ -17,6 +17,7 @@
 package org.atid.editor;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Frame;
@@ -29,6 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.swing.*;
+import javax.swing.UIManager.*;
 import javax.swing.event.*;
 import org.atid.editor.actions.AboutAction;
 import org.atid.editor.actions.AddConditionAction;
@@ -97,17 +99,15 @@ import org.atid.util.ListEditor;
 public class RootPflow implements Root, WindowListener, ListSelectionListener, SelectionChangedListener {
 
     private static final String APP_NAME = "ATID";
-    private static final String APP_VERSION = "0.70";
+    private static final String APP_VERSION = "0.90";
 
     public RootPflow(String[] args) {
         Atid.setRoot(this);
 
         loadPreferences();
         selection.setSelectionChangedListener(this);
-        
+
         /// menu lateral esquerdo
-
-
         setupMainFrame();
         mainFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setupFrameIcons();
@@ -127,6 +127,8 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
                 Logger.getLogger(RootPflow.class.getName()).log(Level.INFO, null, ex);
             }
         }
+       
+       
     }
 
     private static final String CURRENT_DIRECTORY = "current_directory";
@@ -254,33 +256,33 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
         canvas.setCursor(canvas.activeCursor);
         repaintCanvas();
     }
-    
+
     @Override
-    public void selectTool_Event()  {
+    public void selectTool_Event() {
         event.setSelected(true);
-        canvas.activeCursor = GraphicsTools.getCursor("atid/canvas/event.png", new Point(16,16));
+        canvas.activeCursor = GraphicsTools.getCursor("atid/canvas/event.png", new Point(16, 16));
         canvas.setCursor(canvas.activeCursor);
         repaintCanvas();
     }
-    
+
     @Override
-    public boolean isSelectTool_Event(){
+    public boolean isSelectTool_Event() {
         return event.isSelected();
     }
-    
+
     @Override
     public void selectTool_Repository() {
         repository.setSelected(true);
-        canvas.activeCursor = GraphicsTools.getCursor("atid/canvas/repository.png", new Point(16,16));
+        canvas.activeCursor = GraphicsTools.getCursor("atid/canvas/repository.png", new Point(16, 16));
         canvas.setCursor(canvas.activeCursor);
         repaintCanvas();
     }
-    
+
     @Override
-    public boolean isSelectedTool_Repository(){
+    public boolean isSelectedTool_Repository() {
         return repository.isSelected();
     }
-    
+
     @Override
     public boolean isSelectedTool_SimpleActivity() {
         return simpleActivity.isSelected();
@@ -299,12 +301,11 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
         return transition.isSelected();
     }
 
-    
     @Override
     public void selectTool_CompositeActivity() {
         compositeActivity.setSelected(true);
-        canvas.activeCursor = GraphicsTools.getCursor("atid/canvas/compositeactivity.gif", new Point (16,16));
-                canvas.setCursor(canvas.activeCursor);
+        canvas.activeCursor = GraphicsTools.getCursor("atid/canvas/compositeactivity.gif", new Point(16, 16));
+        canvas.setCursor(canvas.activeCursor);
         repaintCanvas();
     }
 
@@ -312,7 +313,7 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
     public boolean isSelectedTool_CompositeActivity() {
         return compositeActivity.isSelected();
     }
-    
+
     @Override
     public void selectTool_Arc() {
         arc.setSelected(true);
@@ -338,8 +339,6 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
     public boolean isSelectedTool_Token() {
         return token.isSelected();
     }
-
-    
 
     @Override
     public JPopupMenu getSimpleActivityPopup() {
@@ -379,10 +378,10 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
     protected JPopupMenu canvasPopup;
 
     //per application
-    protected JToggleButton select, simpleActivity, transition, arc, token, compositeActivity, event, repository ;
+    protected JToggleButton select, simpleActivity, transition, arc, token, compositeActivity, event, repository;
     protected Action setLabel, setTokens, delete;
     protected Action replaceSubnet;
-    
+
     protected Action saveSubnetAs;
     protected Action cutAction, copyAction, pasteAction, selectAllAction, addCondition;
 
@@ -446,8 +445,11 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
         pasteAction.setEnabled(isPastable);
         selectAllAction.setEnabled(true);
         delete.setEnabled(isDeletable);
-        if(isCompositeActivityNode) setTokens.setEnabled(isCompositeActivityNode);
-        else setTokens.setEnabled(isSimpleActivityNode);
+        if (isCompositeActivityNode) {
+            setTokens.setEnabled(isCompositeActivityNode);
+        } else {
+            setTokens.setEnabled(isSimpleActivityNode);
+        }
         setLabel.setEnabled(isSimpleActivityNode || isCompositeActivityNode || isRepositoryNode || isEventNode);
         replaceSubnet.setEnabled(isCompositeActivity || areCompositeActivitys);
         saveSubnetAs.setEnabled(isCompositeActivity);
@@ -546,7 +548,7 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
         Action coverabilityGraph = new CoverabilityGraph(this.getDocument().getPetriNet());
         Action quit = new QuitAction(this);
         setLabel = new SetLabelAction(this);
-        setTokens = new SetTokensAction(this);        
+        setTokens = new SetTokensAction(this);
 
         openCompositeActivity = new OpenCompositeActivityAction(this);
         closeCompositeActivity = new CloseCompositeActivityAction(this);
@@ -556,14 +558,14 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
         copyAction = new CopyAction(this);
         pasteAction = new PasteAction(this);
         selectAllAction = new SelectAllAction();
-        addCondition =  new AddConditionAction(this);
+        addCondition = new AddConditionAction(this);
 
         Action selectTool_SelectionAction = new SelectionSelectToolAction(this);
         Action selectTool_SimpleActivityAction = new SimpleActivitySelectToolAction(this);
         Action selectTool_TransitionAction = new TransitionSelectToolAction(this);
-        
-        Action selectTool_CompositeActivity = new CompositeActivitySelectToolAction(this);  
-        
+
+        Action selectTool_CompositeActivity = new CompositeActivitySelectToolAction(this);
+
         Action selectTool_ArcAction = new ArcSelectToolAction(this);
         Action selectTool_TokenAction = new TokenSelectToolAction(this);
         Action selectTool_Event = new EventSelectToolAction(this);
@@ -577,9 +579,9 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
         transition = new JToggleButton(selectTool_TransitionAction);
         event = new JToggleButton(selectTool_Event);
         repository = new JToggleButton(selectTool_Repository);
-        
+
         compositeActivity = new JToggleButton(selectTool_CompositeActivity);
-        
+
         arc = new JToggleButton(selectTool_ArcAction);
         token = new JToggleButton(selectTool_TokenAction);
 
@@ -626,16 +628,16 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
         toolBar.add(transition);
         toolBar.add(event);
         toolBar.add(repository);
-        
+
         toolBar.add(compositeActivity);
-        
+
         toolBar.add(arc);
         toolBar.addSeparator();
         toolBar.add(token);
         toolBar.addSeparator();
         toolBar.add(closeCompositeActivity);
         toolBar.add(openCompositeActivity);
-        
+
         // Menu principal
         JMenuBar menuBar = new JMenuBar();
         mainFrame.setJMenuBar(menuBar);
@@ -652,10 +654,6 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
         drawMenu.setMnemonic('D');
         menuBar.add(drawMenu);
 
-        JMenu elementMenu = new JMenu("Element");
-        elementMenu.setMnemonic('l');
-        menuBar.add(elementMenu);
-
         JMenu subnetMenu = new JMenu("Subnet");
         subnetMenu.setMnemonic('S');
         menuBar.add(subnetMenu);
@@ -667,12 +665,11 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
 
         //asus 2012 algorithms submenu items
         algorithmsMenu.add(new CoverabilityGraph(Atid.getRoot().getDocument().getPetriNet()));
-        
+
         JMenu configMenu = new JMenu("Settings");
         configMenu.setMnemonic('T');
-        //menuBar.add(configMenu);
-        
-        
+        menuBar.add(configMenu);
+
         JMenu helpMenu = new JMenu("Help");
         helpMenu.add(new AboutAction(this));
         menuBar.add(helpMenu);
@@ -694,13 +691,11 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
         editMenu.add(selectAllAction);
         editMenu.add(delete);
 
-//        elementMenu.add(setLabel);
-        
         drawMenu.add(selectTool_SelectionAction);
         drawMenu.addSeparator();
         drawMenu.add(selectTool_SimpleActivityAction);
         drawMenu.add(selectTool_TransitionAction);
-        //drawMenu.add(selectTool_Event);
+        drawMenu.add(selectTool_Event);
         drawMenu.add(selectTool_Repository);
         drawMenu.add(selectTool_CompositeActivity);
         drawMenu.add(selectTool_ArcAction);
@@ -717,7 +712,7 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
         simpleActivityPopup.add(cutAction);
         simpleActivityPopup.add(copyAction);
         simpleActivityPopup.add(delete);
-        
+
         repositoryPopup = new JPopupMenu();
         repositoryPopup.add(setLabel);
         repositoryPopup.addSeparator();
@@ -754,22 +749,31 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
         subnetPopup.add(copyAction);
         subnetPopup.add(delete);
 
+
         arcEdgePopup = new JPopupMenu();
         arcEdgePopup.add(delete);
+
+        JPanel leftPane = new JPanel();
+
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true);
         splitPane.setDividerSize(6);
         splitPane.setOneTouchExpandable(true);
         splitPane.setRightComponent(drawingBoard);
-        splitPane.setDividerLocation(120);
-
+        splitPane.setLeftComponent(leftPane);
+        splitPane.setDividerLocation(200);
         mainFrame.add(splitPane, BorderLayout.CENTER);
         mainFrame.add(toolBar, BorderLayout.NORTH);
+        
+
+        
 
         mainFrame.addWindowListener(this);
         mainFrame.setLocation(50, 50);
         mainFrame.setSize(800, 650);
         mainFrame.setVisible(true);
+        
+
     }
 
     public Marking getCurrentMarking() {

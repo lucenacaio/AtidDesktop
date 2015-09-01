@@ -57,7 +57,6 @@ public class GraphicsTools {
             return ImageIO.read(GraphicsTools.class.getResource(resourcesDir + fileName));
         } catch (IOException ex) {
             Logger.getLogger(GraphicsTools.class.getName()).log(Level.SEVERE, null, ex);
-            ex.printStackTrace();
             return new BufferedImage(1, 1, IndexColorModel.TRANSLUCENT);
         }
     }
