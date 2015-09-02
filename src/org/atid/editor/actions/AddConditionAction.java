@@ -46,13 +46,17 @@ public class AddConditionAction extends AbstractAction{
             if(root.getClickedElement() instanceof Transition){
                 Transition transition = (Transition) root.getClickedElement();
                 
-                String condition = JOptionPane.showInputDialog(root.getParentFrame(),"Condition: ");
-                if(!condition.equals("")){
+                String condition = JOptionPane.showInputDialog(root.getParentFrame(),"Condition: ", transition.getCondition());
+                if(condition.equals("") && condition != null){
+                    transition.setRest(false);
+                    transition.setCondition(condition);
+                    Atid.getRoot().getDrawingBoard().repaint();
+                }
+                else if(!condition.equals("")){
                     transition.setRest(true);
+                    transition.setCondition(condition);
                     JOptionPane.showMessageDialog(root.getParentFrame(), analiser(condition).toString());
                     Atid.getRoot().getDrawingBoard().repaint();
-                }else{
-                    JOptionPane.showMessageDialog(root.getParentFrame(), "The condition can not be empty.");
                 }
            }
         }
