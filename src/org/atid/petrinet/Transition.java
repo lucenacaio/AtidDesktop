@@ -34,6 +34,15 @@ public class Transition extends TransitionNode implements Cloneable {
 
     private Graphics graph = null;
     private boolean rest = false;
+    private String condition = "";
+
+    public String getCondition() {
+        return condition;
+    }
+
+    public void setCondition(String condition) {
+        this.condition = condition;
+    }
 
     public boolean isRest() {
         return rest;
