@@ -40,7 +40,7 @@ public class LexicalAnalyzer {
     public LexicalAnalyzer() {
         
         this.keywords = new ArrayList<String>(Arrays.asList(
-            new String[]{"not", "dataAtual", "p", "di", "df", "in",
+            new String[]{"not", "dataAtual", "di", "df", "in",
         "out", "and", "or", "n", "true", "false"}));
         
         this.operators = new ArrayList<String>(Arrays.asList( new String[]

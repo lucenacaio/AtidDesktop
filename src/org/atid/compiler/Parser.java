@@ -161,12 +161,6 @@ public class Parser {
             return (B() && C());
         }
         
-        else if ((tokens.get(index).equals("p")) && 
-                (tokens.get(++index).equals("="))){
-            index++;
-            return (E() && C());
-        }
-        
         else if ((tokens.get(index).equals("in")) || 
                 (tokens.get(index).equals("out"))) {
             
