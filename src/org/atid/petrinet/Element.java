@@ -163,4 +163,8 @@ public abstract class Element implements Serializable, Cloneable {
             throw new RuntimeException();
         }
     }
+
+    public String getLabel() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

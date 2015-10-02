@@ -17,7 +17,6 @@
 package org.atid.editor;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Frame;
@@ -30,7 +29,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.swing.*;
-import javax.swing.UIManager.*;
 import javax.swing.event.*;
 import org.atid.editor.actions.AboutAction;
 import org.atid.editor.actions.AddConditionAction;
@@ -56,10 +54,7 @@ import org.atid.editor.actions.SaveCompositeActivityAsAction;
 import org.atid.editor.actions.SaveFileAsAction;
 import org.atid.editor.actions.SelectAllAction;
 import org.atid.editor.actions.SelectionSelectToolAction;
-import org.atid.editor.actions.SetArcInhibitoryAction;
-import org.atid.editor.actions.SetArcResetAction;
 import org.atid.editor.actions.SetLabelAction;
-import org.atid.editor.actions.SetSimpleActivityStaticAction;
 import org.atid.editor.actions.SetTokensAction;
 import org.atid.editor.actions.SimpleActivitySelectToolAction;
 import org.atid.editor.actions.TokenSelectToolAction;
@@ -74,6 +69,7 @@ import org.atid.editor.filechooser.FileType;
 import org.atid.editor.filechooser.FileTypeException;
 import org.atid.editor.filechooser.PflowFileType;
 import org.atid.editor.filechooser.PngFileType;
+import org.atid.observer.RootPflowEvent;
 import org.atid.petrinet.Arc;
 import org.atid.petrinet.CompositeActivity;
 import org.atid.petrinet.CompositeActivityNode;
@@ -81,6 +77,7 @@ import org.atid.petrinet.Document;
 import org.atid.petrinet.Element;
 import org.atid.petrinet.EventNode;
 import org.atid.petrinet.Marking;
+import org.atid.petrinet.Node;
 import org.atid.petrinet.ReferenceSimpleActivity;
 import org.atid.petrinet.RepositoryNode;
 import org.atid.petrinet.Role;
@@ -100,6 +97,9 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
 
     private static final String APP_NAME = "ATID";
     private static final String APP_VERSION = "0.90";
+    private JPanel leftPane = new JPanel();
+    private JTextField txtLabel = new JTextField();
+    private JButton jbSave = new JButton();
 
     public RootPflow(String[] args) {
         Atid.setRoot(this);
@@ -127,8 +127,7 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
                 Logger.getLogger(RootPflow.class.getName()).log(Level.INFO, null, ex);
             }
         }
-       
-       
+
     }
 
     private static final String CURRENT_DIRECTORY = "current_directory";
@@ -192,6 +191,7 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
 
     // Clicked element - per tab
     protected Element clickedElement = null;
+    protected List<RootPflow> elementListener = new ArrayList<RootPflow>();
 
     @Override
     public Element getClickedElement() {
@@ -201,8 +201,35 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
     @Override
     public void setClickedElement(Element clickedElement) {
         this.clickedElement = clickedElement;
+        addClickedElementListener(this);
+        fireClickedElement(clickedElement);
         enableOnlyPossibleActions();
     }
+    //Observer
+    public void addClickedElementListener(RootPflow r) {
+        if (!elementListener.contains(r)) {
+            elementListener.add(r);
+        }
+    }
+
+    public void removerElementListener(RootPflow r) {
+        elementListener.remove(r);
+    }
+
+    public void fireClickedElement(Element clickeElement) {
+        for (RootPflow ouvinte : this.elementListener) {
+            ouvinte.clicou(new RootPflowEvent(this));
+        }
+    }
+
+    public void clicou(RootPflowEvent r) {
+        System.out.println(Atid.getRoot().getClickedElement());
+        if (Atid.getRoot().getClickedElement() != null) {
+            Node node = (Node) Atid.getRoot().getClickedElement();
+            txtLabel.setText(node.getLabel());
+        }
+    }
+    //Fim do observer
 
     // Selection - per tab
     protected Selection selection = new Selection();
@@ -749,30 +776,39 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
         subnetPopup.add(copyAction);
         subnetPopup.add(delete);
 
-
         arcEdgePopup = new JPopupMenu();
         arcEdgePopup.add(delete);
 
-        JPanel leftPane = new JPanel();
+        //Painel Esquerdo Lateral
+        JLabel lblLabel = new JLabel("Label: ");
+        if (Atid.getRoot().getClickedElement() != null) {
+            Node node = (Node) Atid.getRoot().getClickedElement();
+            if (node.getLabel() != null) {
+                txtLabel.setText(node.getLabel());
+                leftPane.repaint();
+            }
+        }
 
+        txtLabel.setColumns(10);
+        leftPane.add(lblLabel);
+        leftPane.add(txtLabel);
+        jbSave.setText("Save");
+        
+        leftPane.add(jbSave);
+        leftPane.repaint();
 
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, leftPane, drawingBoard);
         splitPane.setDividerSize(6);
         splitPane.setOneTouchExpandable(true);
-        splitPane.setRightComponent(drawingBoard);
-        splitPane.setLeftComponent(leftPane);
+        splitPane.setContinuousLayout(true);
         splitPane.setDividerLocation(200);
         mainFrame.add(splitPane, BorderLayout.CENTER);
         mainFrame.add(toolBar, BorderLayout.NORTH);
-        
-
-        
 
         mainFrame.addWindowListener(this);
         mainFrame.setLocation(50, 50);
         mainFrame.setSize(800, 650);
         mainFrame.setVisible(true);
-        
 
     }
 
