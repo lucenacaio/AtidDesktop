@@ -223,8 +223,7 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
     }
 
     public void clicou(RootPflowEvent r) {
-        System.out.println(Atid.getRoot().getClickedElement());
-        if (Atid.getRoot().getClickedElement() != null) {
+        if (Atid.getRoot().getClickedElement() instanceof SimpleActivityNode) {
             Node node = (Node) Atid.getRoot().getClickedElement();
             txtLabel.setText(node.getLabel());
         }
