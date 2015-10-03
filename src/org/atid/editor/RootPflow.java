@@ -64,6 +64,7 @@ import org.atid.editor.actions.algorithms.CoverabilityGraph;
 import org.atid.editor.canvas.Canvas;
 import org.atid.editor.canvas.Selection;
 import org.atid.editor.canvas.SelectionChangedListener;
+import org.atid.editor.commands.SetLabelCommand;
 import org.atid.editor.filechooser.EpsFileType;
 import org.atid.editor.filechooser.FileType;
 import org.atid.editor.filechooser.FileTypeException;
@@ -226,6 +227,13 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
         if (Atid.getRoot().getClickedElement() instanceof SimpleActivityNode) {
             Node node = (Node) Atid.getRoot().getClickedElement();
             txtLabel.setText(node.getLabel());
+            txtLabel.setEnabled(true);
+            txtLabel.setVisible(true);
+        }else{
+            txtLabel.setText("");
+            txtLabel.setEnabled(false);
+            txtLabel.setVisible(false);
+            
         }
     }
     //Fim do observer
@@ -792,6 +800,21 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
         leftPane.add(lblLabel);
         leftPane.add(txtLabel);
         jbSave.setText("Save");
+        
+        jbSave.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+            if (Atid.getRoot().getClickedElement()
+                    != null && Atid.getRoot().getClickedElement() instanceof SimpleActivityNode && !txtLabel.equals(Atid.getRoot().getClickedElement().getLabel())) {
+                Node nodeClicked = (Node) Atid.getRoot().getClickedElement();
+                Atid.getRoot().getUndoManager().executeCommand(new SetLabelCommand(nodeClicked, txtLabel.getText()));
+            }
+
+        
+            }
+        });
         
         leftPane.add(jbSave);
         leftPane.repaint();
