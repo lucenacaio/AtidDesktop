@@ -64,6 +64,7 @@ import org.atid.editor.actions.algorithms.CoverabilityGraph;
 import org.atid.editor.canvas.Canvas;
 import org.atid.editor.canvas.Selection;
 import org.atid.editor.canvas.SelectionChangedListener;
+import org.atid.editor.commands.AddCondition;
 import org.atid.editor.commands.SetLabelCommand;
 import org.atid.editor.filechooser.EpsFileType;
 import org.atid.editor.filechooser.FileType;
@@ -101,6 +102,9 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
     private JPanel leftPane = new JPanel();
     private JTextField txtLabel = new JTextField();
     private JButton jbSave = new JButton();
+    private JLabel lblLabel = new JLabel("Label: ");
+    private JLabel lblCondition = new JLabel("Condition: ");
+    private JTextArea txtCondition = new JTextArea();
 
     public RootPflow(String[] args) {
         Atid.setRoot(this);
@@ -206,7 +210,9 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
         fireClickedElement(clickedElement);
         enableOnlyPossibleActions();
     }
+
     //Observer
+
     public void addClickedElementListener(RootPflow r) {
         if (!elementListener.contains(r)) {
             elementListener.add(r);
@@ -219,21 +225,35 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
 
     public void fireClickedElement(Element clickeElement) {
         for (RootPflow ouvinte : this.elementListener) {
-            ouvinte.clicou(new RootPflowEvent(this));
+            ouvinte.clicked(new RootPflowEvent(this));
         }
     }
 
-    public void clicou(RootPflowEvent r) {
-        if (Atid.getRoot().getClickedElement() instanceof SimpleActivityNode) {
-            Node node = (Node) Atid.getRoot().getClickedElement();
-            txtLabel.setText(node.getLabel());
-            txtLabel.setEnabled(true);
-            txtLabel.setVisible(true);
-        }else{
-            txtLabel.setText("");
-            txtLabel.setEnabled(false);
-            txtLabel.setVisible(false);
-            
+    public void clicked(RootPflowEvent r) {
+        Element elementClicked = Atid.getRoot().getClickedElement();
+        if(elementClicked == null){
+            activeOptionSimpleActivity(elementClicked);
+            activeOptionTransition(false, null);
+            activeOptionEvent(null);
+            activeOptionLabel(false);
+            jbSave.setVisible(false);
+        }//else if(elementClicked instanceof EventNode){;
+           // activeOptionEvent(elementClicked);
+            //activeOptionSimpleActivity(null);
+            //activeOptionTransition(false, null);
+            //activeOptionLabel(true);
+        //}
+        else if(elementClicked instanceof SimpleActivityNode){
+             activeOptionEvent(null);
+            activeOptionSimpleActivity(elementClicked);
+            activeOptionTransition(false, null);
+            activeOptionLabel(true);
+        }
+        else if (elementClicked instanceof Transition) {
+            activeOptionEvent(null);
+            activeOptionLabel(false);
+            activeOptionSimpleActivity(null);
+            activeOptionTransition(true, elementClicked);
         }
     }
     //Fim do observer
@@ -397,6 +417,38 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
     @Override
     public JPopupMenu getCanvasPopup() {
         return canvasPopup;
+    }
+
+    private void activeOptionSimpleActivity(Element element) {
+        jbSave.setVisible(true);
+        if (element != null) {
+            Node nodeClicked = (Node) element;
+            txtLabel.setText(nodeClicked.getLabel());
+        }
+    }
+
+    private void activeOptionTransition(boolean controller, Element element) {
+        lblCondition.setVisible(controller);
+        txtCondition.setVisible(controller);
+        jbSave.setVisible(true);
+        if (element != null) {
+            Transition transitionClicked = (Transition) element;
+            txtCondition.setText(transitionClicked.getCondition());
+        }
+    }
+    
+    private void activeOptionLabel(boolean controller){
+        txtLabel.setVisible(controller);
+        lblLabel.setVisible(controller);
+    }
+    
+    private void activeOptionEvent( Element element){
+
+        jbSave.setVisible(true);
+        if (element != null) {
+            EventNode eventClicked = (EventNode) element;
+            txtLabel.setText(eventClicked.getLabel());
+        }
     }
 
     //per tab
@@ -592,8 +644,7 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
         copyAction = new CopyAction(this);
         pasteAction = new PasteAction(this);
         selectAllAction = new SelectAllAction();
-        addCondition = new AddConditionAction(this);
-
+        addCondition = new AddConditionAction();
         Action selectTool_SelectionAction = new SelectionSelectToolAction(this);
         Action selectTool_SimpleActivityAction = new SimpleActivitySelectToolAction(this);
         Action selectTool_TransitionAction = new TransitionSelectToolAction(this);
@@ -741,8 +792,6 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
         subnetMenu.add(saveSubnetAs);
 
         simpleActivityPopup = new JPopupMenu();
-        simpleActivityPopup.add(setLabel);
-        simpleActivityPopup.addSeparator();
         simpleActivityPopup.add(cutAction);
         simpleActivityPopup.add(copyAction);
         simpleActivityPopup.add(delete);
@@ -765,7 +814,6 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
         transitionPopup.add(cutAction);
         transitionPopup.add(copyAction);
         transitionPopup.add(delete);
-        transitionPopup.add(addCondition);
 
         Font boldFont = new Font(Font.SANS_SERIF, Font.BOLD, 12);
 
@@ -787,35 +835,49 @@ public class RootPflow implements Root, WindowListener, ListSelectionListener, S
         arcEdgePopup.add(delete);
 
         //Painel Esquerdo Lateral
-        JLabel lblLabel = new JLabel("Label: ");
-        if (Atid.getRoot().getClickedElement() != null) {
-            Node node = (Node) Atid.getRoot().getClickedElement();
-            if (node.getLabel() != null) {
-                txtLabel.setText(node.getLabel());
-                leftPane.repaint();
-            }
-        }
+        //Campos invisiveis;
+        lblLabel.setVisible(false);
+        txtLabel.setVisible(false);
+        lblCondition.setVisible(false);
+        jbSave.setVisible(false);
+        txtCondition.setVisible(false);
 
         txtLabel.setColumns(10);
         leftPane.add(lblLabel);
         leftPane.add(txtLabel);
+        leftPane.add(lblCondition);
+        leftPane.add(txtCondition);
         jbSave.setText("Save");
-        
+
+        txtCondition.setColumns(10);
+        txtCondition.setRows(4);
+
         jbSave.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                
-            if (Atid.getRoot().getClickedElement()
-                    != null && Atid.getRoot().getClickedElement() instanceof SimpleActivityNode && !txtLabel.equals(Atid.getRoot().getClickedElement().getLabel())) {
-                Node nodeClicked = (Node) Atid.getRoot().getClickedElement();
-                Atid.getRoot().getUndoManager().executeCommand(new SetLabelCommand(nodeClicked, txtLabel.getText()));
-            }
-
-        
+                Element element = Atid.getRoot().getClickedElement();
+                if (element != null && element instanceof SimpleActivityNode) {
+                    if (!txtLabel.equals(element.getLabel())) {
+                        Node nodeClicked = (Node) element;
+                        Atid.getRoot().getUndoManager().executeCommand(new SetLabelCommand(nodeClicked, txtLabel.getText()));
+                    }
+                } else if(element instanceof EventNode){
+                      if (!txtLabel.equals(element.getLabel())) {
+                        EventNode nodeClicked = (EventNode) element;
+                        Atid.getRoot().getUndoManager().executeCommand(new SetLabelCommand(nodeClicked, txtLabel.getText()));
+                    }
+                }
+                else if(element != null && element instanceof Transition){
+                    Transition t = (Transition) element;
+                    if(!txtCondition.equals(t.getCondition())){
+                        AddCondition.getInstance().setCondition(txtCondition.getText());
+                        AddCondition.getInstance().setTransition(t);
+                        addCondition.actionPerformed(e);
+                    }
+                }
             }
         });
-        
         leftPane.add(jbSave);
         leftPane.repaint();
 

@@ -41,6 +41,7 @@ public class SetLabelCommand implements Command {
     }
 
     public void execute() {
+        
         SimpleActivityNode nodeConvert = (SimpleActivityNode) node;
         if(PetriNet.getNewBegin() == null && newLabel.toLowerCase().equals("begin")){
             this.oldLabel = node.getLabel();

@@ -18,6 +18,7 @@ import javax.swing.KeyStroke;
 import org.atid.compiler.LexicalAnalyzer;
 import org.atid.editor.Atid;
 import org.atid.editor.Root;
+import org.atid.editor.commands.AddCondition;
 import org.atid.petrinet.PetriNet;
 import org.atid.petrinet.Transition;
 import org.atid.petrinet.TransitionNode;
@@ -30,10 +31,10 @@ import org.atid.util.GraphicsTools;
  */
 public class AddConditionAction extends AbstractAction{
 
-    private Root root;
+    
        
-    public AddConditionAction(Root root) {
-        this.root = root;
+    public AddConditionAction() {
+        
         String name = "Condition";
         putValue(NAME, name);
         putValue(SHORT_DESCRIPTION, name);
@@ -42,39 +43,11 @@ public class AddConditionAction extends AbstractAction{
 
     public void actionPerformed(ActionEvent e) {
         
-        if(root.getClickedElement() != null){
-            if(root.getClickedElement() instanceof Transition){
-                Transition transition = (Transition) root.getClickedElement();
-                
-                String condition = JOptionPane.showInputDialog(root.getParentFrame(),"Condition: ", transition.getCondition());
-                if(condition.equals("") && condition != null){
-                    transition.setRest(false);
-                    transition.setCondition(condition);
-                    Atid.getRoot().getDrawingBoard().repaint();
-                }
-                else if(!condition.equals("")){
-                    transition.setRest(true);
-                    transition.setCondition(condition);
-                    JOptionPane.showMessageDialog(root.getParentFrame(), analiser(condition).toString());
-                    Atid.getRoot().getDrawingBoard().repaint();
-                }
+        if(Atid.getRoot().getClickedElement() != null){
+            if(Atid.getRoot().getClickedElement() instanceof Transition){
+               AddCondition.getInstance().execute();
            }
         }
-        
-        
     }
     
-    public StringBuilder analiser(String condition){
-        StringBuilder sb = new StringBuilder();
-        LexicalAnalyzer lexico = new LexicalAnalyzer();
-        lexico.analyze(condition);
-        
-        List<String> lista = lexico.getTokens();
-        
-        for (String token : lista){
-            
-            sb.append(token + "\n");
-        }
-        return sb;
-    }
 }
